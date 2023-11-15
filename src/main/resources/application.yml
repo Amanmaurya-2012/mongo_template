@@ -1,0 +1,34 @@
+---
+
+spring:
+  cloud:
+    stream:
+      default:
+        contentType: application/json
+      bindings:
+        eventSink:
+          destination: eventChannel
+          group: queryServiceGroup
+          binder: rabbit
+          consumer:
+#            requeueRejected: false
+            maxAttempts: 1
+        eventSource:
+          destination: eventChannel
+          binder: rabbit
+  data:
+    mongodb:
+      host: dev.tab.kitecash.in
+      port: 27019
+      database: kite_tab_dev
+      field-naming-strategy: org.springframework.data.mapping.model.SnakeCaseFieldNamingStrategy
+      username: kiteTabDev
+      password: Kite123
+#
+#      Commented as these values are overriding the cloud properties
+
+multithreading:
+  query:
+    corePoolSize: 48
+    maxPoolSize: 96
+    keepAliveSeconds: 600
