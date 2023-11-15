@@ -48,7 +48,7 @@ public class TestServiceImpl implements TestService {
                 break;
             case 3:
                 aggregation = Aggregation.newAggregation(
-                        Aggregation.match(Criteria.where("status").is("ACTIVE").and("user_id").is("07929c3f-a3fb-4542-91ad-cf33820e1458")),
+                        Aggregation.match(Criteria.where("status").is("ACTIVE")),
                         Aggregation.lookup("kite_user_user_address", "_id", "user_id", "address"),
                         Aggregation.unwind("address"));
                 break;
