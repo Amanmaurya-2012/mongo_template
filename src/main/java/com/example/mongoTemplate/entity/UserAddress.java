@@ -6,8 +6,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 @NoArgsConstructor
 @Data
@@ -19,19 +20,45 @@ public class UserAddress {
 
     @Id
     private String idField;
+
+    @Field("address_id")
     private String addressId;
+
+    @Field("user_id")
     private String userId;
+
+    @Field("address_type")
     private String addressType;
+
+    @Field("status")
     private String status;
+
+    @Field("enterprise_id")
     private String enterpriseId;
+
+    @Field("address_line1")
     private String addressLine1;
+
+    @Field("address_line2")
     private String addressLine2;
+
+    @Field("address_line3")
     private String addressLine3;
+
+    @Field("city")
     private String city;
+
+    @Field("state")
     private String state;
+
+    @Field("pin_code")
     private String pinCode;
-    private Timestamp createdOn;
-    private Timestamp modifiedOn;
+
+    @Field("created_on")
+    private Date createdOn;
+
+    @Field("modified_on")
+    private Date modifiedOn;
     public UserAddress(String idField) {
         this.idField = idField;
     }

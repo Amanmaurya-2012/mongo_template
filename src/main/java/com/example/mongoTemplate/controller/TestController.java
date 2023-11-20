@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
@@ -16,7 +18,7 @@ public class TestController {
     private final TestService testService;
 
     @GetMapping("/v1/web/user-data")
-    public UserDataDto getUserDetails(@RequestParam(value = "userId")String userId) {
-        return testService.getUserDetails(userId);
+    public List<UserDataDto> getUserDetails(@RequestParam(value = "type")String type) {
+        return testService.getUserDetails(type);
     }
 }

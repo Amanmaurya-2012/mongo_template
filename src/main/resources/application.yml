@@ -16,13 +16,22 @@ spring:
         eventSource:
           destination: eventChannel
           binder: rabbit
+#  data:
+#    mongodb:
+#      host: dev.tab.kitecash.in
+#      port: 27019
+#      database: kite_tab_dev
+#      field-naming-strategy: org.springframework.data.mapping.model.SnakeCaseFieldNamingStrategy
+#      username: kiteTabDev
+#      password: Kite123
+
   data:
     mongodb:
-      host: dev.tab.kitecash.in
-      port: 27019
-      database: kite_tab_dev
+      host: 35.160.6.46
+      port: 27017
+      database: kite_tab_stag
       field-naming-strategy: org.springframework.data.mapping.model.SnakeCaseFieldNamingStrategy
-      username: kiteTabDev
+      username: kiteTabStag
       password: Kite123
 #
 #      Commented as these values are overriding the cloud properties

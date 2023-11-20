@@ -11,7 +11,7 @@ public class UserDataDto {
     private String id;
     private String userId;
     private String status;
-    private String displayName;
+    private String firstName;
     private String email;
     private String gender;
     private String mobileNo;
@@ -24,6 +24,6 @@ public class UserDataDto {
     private String city;
     private String addressType;
 
-    private String address;
+//    private List<UserAddress> address;
 
 }

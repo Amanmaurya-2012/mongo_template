@@ -5,8 +5,7 @@ import com.example.mongoTemplate.entity.Users;
 import com.example.mongoTemplate.service.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -19,44 +18,60 @@ public class TestServiceImpl implements TestService {
 
     private final MongoTemplate mongoTemplate;
 
-    @Override
-    public UserDataDto getUserDetails(String userId) {
+    public static final Fields userAddressFields = Fields
+            .fields("id", "user_id", "status", "first_name", "email", "gender", "mobile_no", "address");
 
-//        UserDataDto userDataDto = getDTOObject(mongoTemplate
+
+    @Override
+    public List<UserDataDto> getUserDetails(String type) {
+
+//        UserDataDto userData = getDTOObject(mongoTemplate
 //                .aggregate(allowDiskUse(getUserDetailWithAddress(userId)),
 //                        Users.class, UserDataDto.class).getMappedResults());
 
-        UserDataDto userDataDto = getDTOObject(mongoTemplate
-                .aggregate(getAggregationStages(userId),
-                        Users.class, UserDataDto.class).getMappedResults());
+        List<UserDataDto> userDataDtoList = mongoTemplate
+                .aggregate(getAggregationStages(type),
+                        Users.class, UserDataDto.class).getMappedResults();
 
-        return userDataDto;
+        return userDataDtoList;
     }
 
-    public static Aggregation getAggregationStages(String userId) {
+    public static Aggregation getAggregationStages(String type) {
         Aggregation aggregation = null;
 
-        switch (Integer.parseInt(userId)) {
+        switch (Integer.parseInt(type)) {
             case 1:
-                aggregation = Aggregation.newAggregation(
-                        Aggregation.lookup("kite_user_user_address", "_id", "user_id", "address"));
+                LookupOperation lookupOperation1 = Aggregation.lookup("kite_user_user_address", "_id", "user_id", "address");
+                ProjectionOperation projectionOperation1 = Aggregation.project(userAddressFields)
+                        .andInclude("address.address_id", "address.address_line1", "address.address_line2",
+                                "address.address_line3", "address.address_type", "address.city", "address.state");
+                aggregation = Aggregation.newAggregation(lookupOperation1, projectionOperation1);
                 break;
             case 2:
-                aggregation = Aggregation.newAggregation(
-                        Aggregation.match(Criteria.where("status").is("ACTIVE")),
-                        Aggregation.lookup("kite_user_user_address", "_id", "user_id", "address"));
+                MatchOperation matchOperation2 = Aggregation.match(Criteria.where("status").is("ACTIVE"));
+                LookupOperation lookupOperation2 = Aggregation.lookup("kite_user_user_address", "_id", "user_id", "address");
+                ProjectionOperation projectionOperation2 = Aggregation.project(userAddressFields)
+                        .andInclude("address.address_id", "address.address_line1", "address.address_line2",
+                                "address.address_line3", "address.address_type", "address.city", "address.state");
+                aggregation = Aggregation.newAggregation(matchOperation2, lookupOperation2, projectionOperation2);
                 break;
             case 3:
-                aggregation = Aggregation.newAggregation(
-                        Aggregation.match(Criteria.where("status").is("ACTIVE")),
-                        Aggregation.lookup("kite_user_user_address", "_id", "user_id", "address"),
-                        Aggregation.unwind("address"));
+                MatchOperation matchOperation3 = Aggregation.match(Criteria.where("status").is("ACTIVE"));
+                LookupOperation lookupOperation3 = Aggregation.lookup("kite_user_user_address", "_id", "user_id", "address");
+                UnwindOperation unwindOperation3 = Aggregation.unwind("address");
+                ProjectionOperation projectionOperation3 = Aggregation.project(userAddressFields)
+                        .andInclude("address.address_id", "address.address_line1", "address.address_line2",
+                                "address.address_line3", "address.address_type", "address.city", "address.state");
+                aggregation = Aggregation.newAggregation(matchOperation3, lookupOperation3, unwindOperation3, projectionOperation3);
                 break;
             case 4:
-                aggregation = Aggregation.newAggregation(
-                        Aggregation.match(Criteria.where("status").is("ACTIVE")),
-                        Aggregation.lookup("kite_user_user_address", "_id", "user_id", "address"),
-                        Aggregation.unwind("address"),
+                MatchOperation matchOperation4 = Aggregation.match(Criteria.where("status").is("ACTIVE"));
+                LookupOperation lookupOperation4 = Aggregation.lookup("kite_user_user_address", "_id", "user_id", "address");
+                UnwindOperation unwindOperation4 = Aggregation.unwind("address");
+                ProjectionOperation projectionOperation4 = Aggregation.project(userAddressFields)
+                        .andInclude("address.address_id", "address.address_line1", "address.address_line2",
+                                "address.address_line3", "address.address_type", "address.city", "address.state");
+                aggregation = Aggregation.newAggregation( matchOperation4, lookupOperation4, unwindOperation4,
                         Aggregation.project().andExpression("address.city").as("particular_address_type"));
                 break;
         }
